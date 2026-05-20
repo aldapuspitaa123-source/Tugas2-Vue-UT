@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tracking Pengiriman - SITTA UT</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+
+<body>
+    <nav class="menu">
+        <ul style="align-items: center;">
+            <li><a href="dashboard.html"><img src="img/ut.png" alt="" style="max-width: 50px;"></a></li>
+            <li><a href="stock.html">Informasi Bahan Ajar</a></li>
+            <li><a href="tracking.html">Tracking Pengiriman</a></li>
+            <li class="dropdown">
+                <div>
+                    <a href="#" style="padding-right: 0px !important;">Laporan</a>
+                    <i class="fa fa-caret-down" style="color: #fff !important;"></i>
+                </div>
+                <div class="dropdown-content">
+                    <a href="#">Monitoring Progress DO Bahan Ajar</a>
+                    <a href="#">Rekap Bahan Ajar</a>
+                </div>
+            </li>
+            <li><a href="#">Histori Transaksi</a></li>
+        </ul>
+        <!-- Logout -->
+        <a id="logoutBtn">
+            <i class="fa fa-sign-out"></i>
+            Logout
+        </a>
+    </nav>
+
+    <div id="trackingApp">
+        <div class="tracking-container">
+            <h2>Tracking DO</h2>
+            <form @submit.prevent="submitDO" class="form-do">
+                <label>Nomor DO:</label>
+                <input type="text" v-model="newDO.nomorDO" disabled />
+            
+                <label>NIM:</label>
+                <input type="text" v-model="newDO.nim"/>
+            
+                <label>Nama:</label>
+                <input type="text" v-model="newDO.nama"/>
+            
+                <div class="filter-container" style="justify-content: start !important;">
+                    <div>
+                        <label style="margin-right: 12px;">Ekspedisi:</label>
+                        <select v-model="newDO.ekspedisi">
+                            <option disabled value="">Pilih Ekspedisi</option>
+                            <option v-for="(exp, i) in pengirimanList" :key="i" :value="exp.nama">
+                                {{ exp.nama }}
+                            </option>
+                        </select>
+                    </div>
+                    
+                    <div>
+                        <label style="margin-right: 12px;">Paket Bahan Ajar:</label>
+                        <select v-model="newDO.paket">
+                            <option disabled value="">Pilih Paket</option>
+                            <option v-for="(p, i) in paketList" :key="i" :value="p.kode">
+                                {{ p.kode }} - {{ p.nama }}
+                            </option>
+                        </select>
+                    </div>
+                    <div class="date-do">
+                        <label style="margin-right: 12px;">Tanggal Kirim:</label>
+                        <input type="date" v-model="newDO.tanggalKirim" style="font-size: 12px;" />
+                    </div>
+                </div>
+            
+                <!-- Detail Paket -->
+                <div v-if="selectedPaket" class="paket-detail">
+                    <h4>Detail Isi Paket:</h4>
+                    <ol>
+                        <li v-for="(item, i) in selectedPaket.isi" :key="i">{{ item }}</li>
+                    </ol>
+                    <p><b>Total Harga:</b> Rp {{ selectedPaket.harga.toLocaleString('id-ID') }}</p>
+                </div>
+            
+            
+                <button type="submit" class="find-button">Tambah DO baru</button>
+            </form>
+        </div>
+
+        <div class="tracking-table">
+            <h3>Daftar Tracking DO</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nomor DO</th>
+                        <th>NIM</th>
+                        <th>Nama</th>
+                        <th>Ekspedisi</th>
+                        <th>Paket</th>
+                        <th>Tanggal Kirim</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="(item, key) in trackingList" :key="key">
+                        <td>{{ key }}</td>
+                        <td>{{ item.nim }}</td>
+                        <td>{{ item.nama }}</td>
+                        <td>{{ item.ekspedisi }}</td>
+                        <td>{{ item.paket }}</td>
+                        <td>{{ item.tanggalKirim }}</td>
+                        <td>Rp {{ item.total.toLocaleString('id-ID') }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div id="trackingResult" class="tracking-result"></div>
+
+    <script src="https://unpkg.com/vue@3.4.38/dist/vue.global.prod.js"></script>
+    <script src="js/dataBahanAjar.js"></script>
+    <script src="js/tracking-app.js"></script>
+    <script src="js/script.js"></script>
+</body>
+
+</html>
