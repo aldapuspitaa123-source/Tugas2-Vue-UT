@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Informasi Stok Bahan Ajar - SITTA UT</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+
+<body>
+    <nav class="menu">
+        <ul style="align-items: center;">
+            <li><a href="dashboard.html"><img src="img/ut.png" alt="" style="max-width: 50px;"></a></li>
+            <li><a href="stock.html">Informasi Bahan Ajar</a></li>
+            <li><a href="tracking.html">Tracking Pengiriman</a></li>
+            <li class="dropdown">
+                <div>
+                    <a href="#" style="padding-right: 0px !important;">Laporan</a>
+                    <i class="fa fa-caret-down" style="color: #fff !important;"></i>
+                </div>
+                <div class="dropdown-content">
+                    <a href="#">Monitoring Progress DO Bahan Ajar</a>
+                    <a href="#">Rekap Bahan Ajar</a>
+                </div>
+            </li>
+            <li><a href="#">Histori Transaksi</a></li>
+        </ul>
+        <!-- Logout -->
+        <a id="logoutBtn">
+            <i class="fa fa-sign-out"></i>
+            Logout
+        </a>
+    </nav>
+
+    <!-- STOCK CONTAINER -->
+    <div id="stockApp" class="container">
+        <h2>Informasi Stok Bahan Ajar</h2>
+
+        <div class="filter-container">
+            <div class="select-filter">
+                <h4>Filter</h4>
+                <select v-model="selectedUpbjj">
+                    <option value="">Pilih UPBJJ</i></option>
+                    <option v-for="(u, i) in upbjjList" :key="i">{{ u }}</option>
+                </select>
+
+                <select v-model="selectedKategori" :disabled="!selectedUpbjj" :style="{ backgroundColor: !selectedUpbjj ? '#f0f0f0' : '#d9d8d4', cursor: !selectedUpbjj ? 'not-allowed' : 'pointer' }">
+                    <option value="">Semua Kategori</option>
+                    <option v-for="(k, i) in kategoriListFiltered" :key="i">{{ k }}</option>
+                </select>
+                <select v-model="sortBy">
+                    <option value="">Urutkan berdasarkan</option>
+                    <option value="judul">Judul</option>
+                    <option value="qty">Jumlah</option>
+                    <option value="harga">Harga</option>
+                </select>
+                
+                <button @click="resetFilter" class="reset-filter-btn"><i class="fa fa-refresh" aria-hidden="true"></i></button>
+            </div>
+
+            <div class="checkbox-filter">
+                <input type="checkbox" v-model="isSafety"> Tampilkan stok menipis / kosong
+            </div>
+            
+        </div>
+        <button style="width: 20% !important;" class="find-button" @click="openAddModal"><i class="fa fa-plus" aria-hidden="true"></i> Tambah Bahan Ajar</button>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Kode</th>
+                    <th>Judul</th>
+                    <th>Kategori</th>
+                    <th>UPBJJ</th>
+                    <th>Lokasi Rak</th>
+                    <th>Harga</th>
+                    <th>Jumlah</th>
+                    <th>Status</th>
+                    <th>Catatan</th>
+                    <th>Aksi</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for="item in filteredData" :key="item.kode">
+                    <td>{{ item.kode }}</td>
+                    <td>{{ item.judul }}</td>
+                    <td>{{ item.kategori }}</td>
+                    <td>{{ item.upbjj }}</td>
+                    <td>{{ item.lokasiRak }}</td>
+                    <td>{{ item.harga }}</td>
+                    <td>{{ item.qty }}</td>
+                    <td :class="statusKelas(item)">
+                        {{ statusText(item) }}
+                    </td>
+                    <td v-html="item.catatanHTML"></td>
+                    <td style="display: flex;">
+                        <button @click="editItem(item)" class="edit">
+                            <i class="fa fa-pencil" aria-hidden="true"></i>
+                        </button>
+                        <button @click="deleteItem(item)" class="delete">
+                            <i class="fa fa-trash-o" aria-hidden="true"></i>
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <script src="https://unpkg.com/vue@3.4.38/dist/vue.global.prod.js"></script>
+    <script src="js/dataBahanAjar.js"></script>
+    <script src="js/stock-app.js"></script>
+    <script src="js/script.js"></script>
+</body>
+
+</html>
